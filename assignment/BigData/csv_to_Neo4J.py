@@ -1,4 +1,16 @@
 from py2neo import Graph
+from subprocess import Popen, PIPE
+
+
+class Bug:
+    uid = ""
+    product = ""
+    componant = ""
+    status = ""
+    resolved = ""
+    date = ""
+    kernel = ""
+
 
 def checkAuthor(name):  #Checks if the author already exists in the database.
     name = strip_punctuation(name) #Should remove all special chars
@@ -10,8 +22,10 @@ def checkAuthor(name):  #Checks if the author already exists in the database.
         return True
     return
 
-def checkDate(date):
-    query = graph.cypher.execute("MATCH(Date{date:'"+str(date)+"'}) RETURN(date)")
+def checkDate(date): 
+    print("checking date:")
+    print(date)
+    query = graph.cypher.execute("MATCH(Date{date:'"+str(date)+"'}) RETURN(Date)")
     if query.one == None:
         return False
     else:
@@ -26,6 +40,13 @@ def checkProduct(projName):     #Checks if project already exists
 
 def checkComponant(comName):    #Checks if Conponants already exists
     query = graph.cypher.execute("MATCH(Componant{name:'"+str(comName)+"'}) RETURN(Componant)")
+    if query.one == None:
+        return False
+    else:
+        return True
+
+def checkKernel(kernel):    #Checks if Conponants already exists
+    query = graph.cypher.execute("MATCH(Kernel{name:'"+str(kernel)+"'}) RETURN(Kernel)")
     if query.one == None:
         return False
     else:
@@ -47,8 +68,42 @@ def addComponant(comName):      #Adds new conponant and links to the project its
     return
 
 def addDate(date):
-    query = graph.cypher.execute("CREATE (d:Date{date: '"+str(date)+"'})RETURN d")
+    query = graph.cypher.execute("CREATE (d:Date{date:'"+str(date)+"'})RETURN d")
     return 
+
+def addKernel(kernel):
+    query = graph.cypher.execute("CREATE (d:Kernel{name: '"+str(kernel)+"'})RETURN d")
+    return
+
+
+def addBug(bug):
+
+    if checkDate(bug.date) != False:
+        print("Adding date")
+        addDate(bug.date)
+    if checkKernel(bug.kernel) != False:
+        print("Adding kernel")
+        addKernel(bug.kernel)
+    if checkComponant(bug.conponant) != False:
+        print("adding componant")
+        addComponant(bug.conponant)
+
+    #TODO Add rest of query content
+
+    query = graph.cypher.execute("MATCH (d:Date),(c:Componant),(k:Kernel) \
+            WHERE d.date = '"+bug.date+"' AND c.name = '"+bug.componant+"' AND k.name = '"+bug.kernel+"'  \
+            CREATE (b:Bug{uid:'"+str(bug.uid)+"',status:'"+bug.status+"'}) \
+            RETURN b")
+
+            #CREATE (b)-[od:Opened_date]->(d) \
+            #CREATE (b)-[ob:Opened_by]->(p) \
+            #CREATE (b)-[fi:Found_in]->(k) \
+    print(query)
+    if query.one == None:
+        print("Something went wrong")
+
+
+
 
 print("Please input the filename to put into Neo4J: ")
 fileName = input()
@@ -65,13 +120,38 @@ print("Columns : ")
 print(lines[0])
 
 print("Connecting to Neo4J")
-graph = Graph("http://neo4j:BigData@localhost:7474/db/data")
+graph = Graph("http://neo4j:BigData@localhost:7474/db/data/")
 if graph == None:
     print("Couldent connect")
 
+
+count = 0
 for line in lines:
-    line
 
+    if count == 0:
+        count += 1
+        continue
 
+    print("here")
+
+    print("now Here")
+
+    bug = Bug()
+    bug.uid = line[0].replace("\"","")
+    bug.product = line[1].replace("\"","")
+    bug.conponant = line[2].replace("\"","")
+    bug.status = line[6].replace("\"","")
+    bug.kernel = line[8].replace("\"","")
+    
+    #Need to do a bit of hacky processing to get the date right
+    command = Popen(["date","--date="+line[10].replace("-","/").replace("\"","")+"","+\'%s\'"],stdout=PIPE)
+    date = command.communicate("")[0].decode()
+    bug.date = date.replace("\'","")
+
+#    print(bug)
+    addBug(bug)
+
+    break
+    count += 1
 
 
