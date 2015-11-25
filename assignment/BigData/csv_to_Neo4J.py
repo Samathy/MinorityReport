@@ -39,6 +39,7 @@ def checkProduct(projName):     #Checks if project already exists
         return True
 
 def checkComponant(comName):    #Checks if Conponants already exists
+    print("Chcking Componant")
     query = graph.cypher.execute("MATCH(Componant{name:'"+str(comName)+"'}) RETURN(Componant)")
     if query.one == None:
         return False
@@ -78,21 +79,23 @@ def addKernel(kernel):
 
 def addBug(bug):
 
-    if checkDate(bug.date) != False:
+    if checkDate(bug.date) == False:
         print("Adding date")
         addDate(bug.date)
-    if checkKernel(bug.kernel) != False:
+    if checkKernel(bug.kernel) == False:
         print("Adding kernel")
         addKernel(bug.kernel)
-    if checkComponant(bug.conponant) != False:
+    if checkComponant(bug.componant) == False:
         print("adding componant")
-        addComponant(bug.conponant)
+        addComponant(bug.componant)
 
     #TODO Add rest of query content
 
-    query = graph.cypher.execute("MATCH (d:Date),(c:Componant),(k:Kernel) \
-            WHERE d.date = '"+bug.date+"' AND c.name = '"+bug.componant+"' AND k.name = '"+bug.kernel+"'  \
-            CREATE (b:Bug{uid:'"+str(bug.uid)+"',status:'"+bug.status+"'}) \
+    query = graph.cypher.execute("MATCH (d:Date), (k:Kernel), (c:Componant) \
+    WHERE d.date = '"+bug.date+"' AND k.name = '"+bug.kernel+"' AND c.name = '"+bug.componant+"' \
+    CREATE (b:Bug{uid:'"+str(bug.uid)+"',status:'"+bug.status+"'}) \
+            CREATE (b)-[od:Opened_date]->(d) \
+            CREATE (b)-[fi:Found_in]->(k) \
             RETURN b")
 
             #CREATE (b)-[od:Opened_date]->(d) \
@@ -126,20 +129,20 @@ if graph == None:
 
 
 count = 0
+
+product = "File Systems"
+componant = "ext4"
+
 for line in lines:
 
     if count == 0:
         count += 1
         continue
 
-    print("here")
-
-    print("now Here")
-
     bug = Bug()
     bug.uid = line[0].replace("\"","")
-    bug.product = line[1].replace("\"","")
-    bug.conponant = line[2].replace("\"","")
+    bug.product = product
+    bug.componant = componant
     bug.status = line[6].replace("\"","")
     bug.kernel = line[8].replace("\"","")
     
@@ -151,7 +154,8 @@ for line in lines:
 #    print(bug)
     addBug(bug)
 
-    break
     count += 1
+
+print("Added "+str(count)+" Bugs")
 
 
