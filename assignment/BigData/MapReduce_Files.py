@@ -44,8 +44,18 @@ for files in fileList:      #For every file we have to analyse
             d[key] += 1
         lineCount += 1
 
+out = open("Sorted_Files.csv",'w')
+
+out.write("Filename,Occurances\n")
 for k in sorted(d, key=d.get, reverse=True):
     print(k,d[k])
+    out.write(k+","+str(d[k])+"\n")
+
+
+out.close()
+
+
+
 
 
 
