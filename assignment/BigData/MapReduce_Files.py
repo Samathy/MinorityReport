@@ -44,7 +44,7 @@ for files in fileList:      #For every file we have to analyse
             d[key] += 1
         lineCount += 1
 
-for k in sorted(d, key=d.get):
+for k in sorted(d, key=d.get, reverse=True):
     print(k,d[k])
 
 
