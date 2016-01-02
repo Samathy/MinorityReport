@@ -21,3 +21,19 @@ At the moment. Don't, but heres the dependancys anyway.
 (git Python)[https://github.com/python-git/python]
 (Neo4J)[http://neo4j.com/]
 
+
+
+TODO
+=======
+***
+
+- [x] Write description of the process
+- [ ] Remove project specific stuff
+- [ ] Clean up and comment code 
+- [ ] Add master script for automating it all
+- [ ] Write tests for things
+- [ ] Write Auto-install script for getting the dependancies.
+- [ ] Write something that displays the data in a graph nicely.
+
+
+
