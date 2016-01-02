@@ -1,3 +1,16 @@
+#------------------------------------------------
+#    Inputs CSV file of bugs into Neo4J graph
+#
+#    TODO:
+#    [ ] Remove Linux specific bits
+#    [ ] Move database connection string to external file
+#    [ ] Provide support for whatever bug data you have to be inputted, instead of specific fields
+#    [ ] Allow script to be ran with bugs file specified instead of assumed as always being 'bugs.csv'
+#    
+
+
+
+
 from py2neo import Graph
 from subprocess import Popen, PIPE
 
