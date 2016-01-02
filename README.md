@@ -19,9 +19,9 @@ Using
 *** 
 At the moment. Don't, but heres the dependancys anyway.
 
-(Git2Neo)[http://github.com/samathy/git2neo]
-(git Python)[https://github.com/python-git/python]
-(Neo4J)[http://neo4j.com/]
+[Git2Neo](http://github.com/samathy/git2neo)
+[Git Python](https://github.com/python-git/python)
+[Neo4J](http://neo4j.com/)
 
 
 
