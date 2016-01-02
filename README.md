@@ -31,11 +31,13 @@ TODO
 
 - [x] Write description of the process
 - [ ] Remove project specific stuff
-- [ ] Clean up and comment code 
+- [ ] Clean up, rename, describe, and comment code 
 - [ ] Add master script for automating it all
 - [ ] Write tests for things
 - [ ] Write Auto-install script for getting the dependancies.
 - [ ] Write something that displays the data in a graph nicely.
+- [ ] Package code better, maybe as a module with a single config/process script
+
 
 
 
