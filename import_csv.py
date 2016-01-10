@@ -119,56 +119,57 @@ def addBug(bug):
         print("Something went wrong")
 
 
+if __name__ == "__main__":
+    return
+
+def main(filename, connectionstring,product,componant):
 
 
-print("Please input the filename to put into Neo4J: ")
-fileName = input()
-
-f = open(fileName)
-
-if  f == None:
-    print("Couldent open file: "+fileName)
+    csvFileName = filename
+    connectionString = connectionstring
 
 
-lines = f.readlines()
-lines = [line.split(',') for line in lines]
-print("Columns : ")
-print(lines[0])
+    f = open(csvFileName)
 
-print("Connecting to Neo4J")
-graph = Graph("http://neo4j:BigData@localhost:7474/db/data/")
-if graph == None:
-    print("Couldent connect")
+    if  f == None:
+        print("Couldent open file: "+csvFileName)
 
 
-count = 0
+    lines = f.readlines()
+    lines = [line.split(',') for line in lines]
+    print("Columns : ")
+    print(lines[0])
 
-product = "File Systems"
-componant = "ext4"
+    print("Connecting to Neo4J")
+    graph = Graph(connectionString)
+    if graph == None:
+        print("Couldent connect")
 
-for line in lines:
 
-    if count == 0:
+    count = 0
+    for line in lines:
+
+        if count == 0:
+            count += 1
+            continue
+
+        bug = Bug()
+        bug.uid = line[0].replace("\"","")
+        bug.product = product
+        bug.componant = componant
+        bug.status = line[6].replace("\"","")
+        bug.kernel = line[8].replace("\"","")
+        
+        #Need to do a bit of hacky processing to get the date right
+        command = Popen(["date","--date="+line[10].replace("-","/").replace("\"","")+"","+\'%s\'"],stdout=PIPE)
+        date = command.communicate("")[0].decode()
+        bug.date = date.replace("\'","")
+
+    #    print(bug)
+        addBug(bug)
+
         count += 1
-        continue
 
-    bug = Bug()
-    bug.uid = line[0].replace("\"","")
-    bug.product = product
-    bug.componant = componant
-    bug.status = line[6].replace("\"","")
-    bug.kernel = line[8].replace("\"","")
-    
-    #Need to do a bit of hacky processing to get the date right
-    command = Popen(["date","--date="+line[10].replace("-","/").replace("\"","")+"","+\'%s\'"],stdout=PIPE)
-    date = command.communicate("")[0].decode()
-    bug.date = date.replace("\'","")
-
-#    print(bug)
-    addBug(bug)
-
-    count += 1
-
-print("Added "+str(count)+" Bugs")
+    print("Added "+str(count)+" Bugs")
 
 
