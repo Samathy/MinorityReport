@@ -1,4 +1,5 @@
-import os
+from os import walk
+import import_csv
 
 #####
 #   Short note about how i'm gonnado the setup and config files:
@@ -18,20 +19,41 @@ for line in Lines:
 
     if line == "repoPath":      #Get the repo
         repoPath == Lines[lineCount+1]
+    elif line == "connectionString"
+        connectionString = Lines[lineCount+1]
     elif line == "folder":              #Get the folder of files listing each componant
         folder = Lines[lineCount+1]
     
     lineCount += 1
 
 
-for files in os.listdir(os.getcwd()):
-    next
+for root, dirs, files in walk(repoPath):        #Get all the files in that there directory
+    num = num + 1
+    files = [f for f in files if not f[0] == '.']
+
+close(f)
+    
 
 
 
 print("This is Minority Report. I will start by importing your bugs into Neo4J.")
 
-import csv_to_Neo4J
+for f in files:                  #for every fle
+    subComponantFile = open(f)
+
+    Lines = subComponantFile.readlines()
+    lineCount == 0
+    for line in Lines:          #If the line specifies a csv, import that into the DB
+        if line == "CSV":
+            import_csv.main(Lines[lineCount+1],onnectionString
+            next
+        elif line == "gitImportRc":
+            gitImportRc = Lines[lineCount+1]
+
+        lineCount = lineCount +1
+
+    Git2Neo.main(rc=gitImportRc)    #Go for importing the sub repo into the GraphDB
+
 
 print("Now importing Git data")
 
