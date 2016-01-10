@@ -55,6 +55,10 @@ for f in files:                  #for every fle
     Git2Neo.main(rc=gitImportRc)    #Go for importing the sub repo into the GraphDB
 
 
+
+
+
+
 print("Now importing Git data")
 
 #import Git2Neo     #Need to make git2neo a proper module first, then I can just import the directory its cloned into.
